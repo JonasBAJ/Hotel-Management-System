@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<GridPane focusTraversable="true" maxHeight="300.0" maxWidth="420.0" minHeight="320.0" minWidth="380.0" prefHeight="320.0" prefWidth="420.0" styleClass="background" stylesheets="@../css/login.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.LoginUI">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="294.0" minWidth="10.0" prefWidth="105.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="532.0" minWidth="10.0" prefWidth="315.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints maxHeight="123.0" minHeight="10.0" prefHeight="49.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="226.0" minHeight="10.0" prefHeight="168.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="79.0" minHeight="10.0" prefHeight="67.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="79.0" minHeight="10.0" prefHeight="23.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <HBox alignment="CENTER" spacing="15.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <children>
+            <Button fx:id="loginButton" mnemonicParsing="false" text="Login">
+               <effect>
+                  <DropShadow />
+               </effect>
+            </Button>
+            <Button mnemonicParsing="false" text="New user">
+               <effect>
+                  <DropShadow />
+               </effect>
+            </Button>
+         </children>
+      </HBox>
+      <VBox alignment="CENTER" prefHeight="174.0" prefWidth="301.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <children>
+            <ChoiceBox fx:id="userTypeBox" maxWidth="200.0" prefWidth="150.0" styleClass="choicebox" />
+            <ChoiceBox fx:id="employeeBox" maxWidth="200.0" prefWidth="150.0" styleClass="choicebox" />
+            <TextField fx:id="nameField" maxWidth="200.0" promptText="Name" />
+            <PasswordField fx:id="passField" maxWidth="200.0" promptText="Password" />
+            <CheckBox fx:id="loadDataBox" maxWidth="150.0" mnemonicParsing="false" text="Load test data">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+            </CheckBox>
+         </children>
+      </VBox>
+      <HBox alignment="CENTER" GridPane.columnIndex="1">
+         <children>
+            <Label id="mainLabel" styleClass="main-label" text="Hotel management system &gt; Login" GridPane.columnIndex="1">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <VBox alignment="CENTER_RIGHT" prefHeight="200.0" prefWidth="100.0" spacing="17.0" GridPane.rowIndex="1">
+         <children>
+            <Label text="Login as:">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label text="Hotel:">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label text="User Name">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label text="Password">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label text="Test" />
+         </children>
+      </VBox>
+      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+         <children>
+            <Label fx:id="statusBar" alignment="CENTER" styleClass="status-bar" text="Not logged in">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <padding>
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+               </padding>
+            </Label>
+         </children>
+      </HBox>
+   </children>
+</GridPane>
