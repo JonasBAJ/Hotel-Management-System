@@ -15,6 +15,7 @@ public class Main  extends Application
     public void start(Stage primaryStage) throws Exception
     {
         MyController myController = new MyController(primaryStage);
+        myController.setPassFilePath("/home/jonas/Hotel2/src/datafiles/pass");
         myController.showLogin();
     }
 }

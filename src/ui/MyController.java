@@ -7,6 +7,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import logic.Controller;
+import logic.Hotel;
 import logic.HotelSystem;
 import ui.addInterface.AddUI;
 
@@ -14,10 +15,16 @@ import ui.addInterface.AddUI;
 public class MyController extends HotelSystem implements Controller
 {
     private Stage stage;
+    protected String passPath;
 
     public MyController(Stage stage)
     {
         this.stage = stage;
+    }
+
+    public void setPassFilePath(String path)
+    {
+        passPath = path;
     }
 
     public void showLogin()
@@ -48,7 +55,7 @@ public class MyController extends HotelSystem implements Controller
         } catch (Exception ex) { ex.printStackTrace(); }
     }
 
-    public void showAddWindow(AddUI addInterface)
+    public void showAddWizard(AddUI addInterface)
     {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ui_add.fxml"));
         try {
@@ -64,9 +71,8 @@ public class MyController extends HotelSystem implements Controller
         } catch (Exception ex) { ex.printStackTrace(); }
     }
 
-    public void showMainEmployee(String sessionID, String hotelId)
+    public void showMainEmployee(Hotel hotel)
     {
-        System.out.println(sessionID + hotelId + "logged in as employee");
         System.out.println("Not implemented");
     }
 }

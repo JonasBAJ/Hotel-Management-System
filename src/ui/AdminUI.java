@@ -97,7 +97,7 @@ public class AdminUI
                     tableController.updateTableView(hotel.getEmployees(), Employee.getColumnNames());
                     break;
                 case CLIENTS:
-                    tableController.updateTableView(hotel.getClients(), Client.getColumnNames());
+                    tableController.updateTableView(hotel.getClients(), Client.getFieldNames());
                     break;
                 case ROOMS:
                     tableController.updateTableView(hotel.getRooms(), Room.getColumnNames());
@@ -143,7 +143,7 @@ public class AdminUI
         Button button = new Button(buttonText);
         button.setOnAction(e -> {
             try {
-                myController.showAddWindow(addInterface);
+                myController.showAddWizard(addInterface);
             }
             catch (Exception ex)
             {

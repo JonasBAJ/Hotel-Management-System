@@ -18,7 +18,6 @@ public class LoginUI
     @FXML private CheckBox loadDataBox;
     private MyController myController;
 
-
     public void initForm(MyController myController)
     {
         this.myController = myController;
@@ -38,7 +37,7 @@ public class LoginUI
     private void initLoginButton()
     {
         loginButton.setOnAction(e -> {
-            if (myController.authorize(getUserData())) {
+            if (myController.authorize(getUserData(), myController.passPath)) {
                 myController.showMainAdmin();
             } else {
                 statusBar.setText("No such user");
@@ -50,7 +49,7 @@ public class LoginUI
     {
         passField.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
             if (passField.isFocused() && !passField.getText().equals("") && e.getCode() == KeyCode.ENTER) {
-                if (myController.authorize(getUserData())) {
+                if (myController.authorize(getUserData(),myController.passPath)) {
                     myController.showMainAdmin();
                 } else {
                     statusBar.setText("No such user");
