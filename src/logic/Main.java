@@ -4,6 +4,10 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import ui.MyController;
 
+
+/**
+ * Program entry point.
+ */
 public class Main  extends Application
 {
     public static void main(String[] args)

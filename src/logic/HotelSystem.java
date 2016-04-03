@@ -10,7 +10,10 @@ import java.util.List;
 
 
 /**
- *
+ * HotelSystem class is main class for controlling all system
+ * object of this class contains all needed getters and setters
+ * for this program to run. This class must extend controller
+ * object to create user interface.
  */
 public class HotelSystem
 {

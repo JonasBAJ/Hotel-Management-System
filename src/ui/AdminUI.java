@@ -100,7 +100,7 @@ public class AdminUI
                     tableController.updateTableView(hotel.getClients(), Client.getFieldNames());
                     break;
                 case ROOMS:
-                    tableController.updateTableView(hotel.getRooms(), Room.getColumnNames());
+                    tableController.updateTableView(hotel.getRooms(), Room.getFieldNames());
                     break;
             }
         }

@@ -63,7 +63,7 @@ public class Client implements Selectable
     /**
      * Method returns user class field names for easier ui development,
      * to quickly display information about client.
-     * @return fields array.
+     * @return fields
      */
     @Contract(pure = true) public static String[] getFieldNames()
     {
