@@ -5,7 +5,10 @@ import javafx.collections.FXCollections;
 import logic.employees.Chef;
 import logic.employees.Manager;
 import logic.employees.Receptionist;
+import logic.tasks.Task;
+import logic.tasks.TaskFactory;
 
+import java.util.Collection;
 import java.util.List;
 
 
@@ -25,6 +28,10 @@ public class HotelSystem
      * Field users contains list of all user in the system.
      */
     private List<User> users;
+    /**
+     * Field users contains list of all tasks in the system.
+     */
+    private List<Task> systemTasks;
 
     /**
      * Constructor.
@@ -32,6 +39,7 @@ public class HotelSystem
     public HotelSystem() {
         this.users = FXCollections.observableArrayList();
         this.hotels = FXCollections.observableArrayList();
+        this.systemTasks = FXCollections.observableArrayList();
     }
 
     /**
@@ -91,6 +99,31 @@ public class HotelSystem
         }
     }
 
+    public void addTask()
+    {
+        this.systemTasks.add(TaskFactory.getSystemLevel(this));
+    }
+
+    public void addTasks(Collection<HotelSystem> systems)
+    {
+
+    }
+
+    public List<Task> getAllTasks()
+    {
+        return this.systemTasks;
+    }
+
+    public List<Task> getTasksByType(Task.Type type)
+    {
+        List<Task> typeList = FXCollections.observableArrayList();
+        for (Task task : this.systemTasks){
+            if (task.getType() == type)
+                typeList.add(task);
+        }
+        return typeList;
+    }
+
     /**
      * Method loads test data into the system.
      */
@@ -125,5 +158,6 @@ public class HotelSystem
         getHotelByName("Hotel2").addEmployee(new Receptionist("Name7", "Surname7"));
         getHotelByName("Hotel2").addEmployee(new Receptionist("Name8", "Surname8"));
         getHotelByName("Hotel2").addEmployee(new Receptionist("Name9", "Surname9"));
+        this.addTask();
     }
 }

@@ -1,9 +1,12 @@
 package logic;
 
 import javafx.collections.FXCollections;
+import javafx.scene.Node;
 import logic.employees.Employee;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.prefs.NodeChangeEvent;
 
 
 /**
@@ -117,6 +120,19 @@ public class Hotel
     }
 
     /**
+     * Method removes employee from employees list in hotel object.
+     * @param employee
+     *      Existing employee object.
+     */
+    public void removeEmployee(Employee employee)
+    {
+        if (employees.contains(employee)) {
+            employees.remove(employee);
+            personnelCount--;
+        }
+    }
+
+    /**
      * Method adds new room to this hotel object.
      * @param room
      *      New room object.
@@ -125,6 +141,19 @@ public class Hotel
     {
         rooms.add(room);
         roomsCount++;
+    }
+
+    /**
+     * Method removes room from rooms list in hotel object.
+     * @param room
+     *      Existing room object.
+     */
+    public void removeRoom(Room room)
+    {
+        if (rooms.contains(room)) {
+            rooms.remove(room);
+            roomsCount--;
+        }
     }
 
     /**
@@ -163,6 +192,38 @@ public class Hotel
     {
         clients.add(client);
         clientCount++;
+    }
+
+    /**
+     * Method removes client from clients list in hotel object.
+     * @param client
+     *      Existing client object.
+     */
+    public void removeClient(Client client)
+    {
+        if (clients.contains(client)) {
+            clients.remove(client);
+            clientCount--;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> int removeSelected(List<T> list)
+    {
+        try {
+            List<Selectable> selectableList = ((List<Selectable>) list);
+            int oldSize = selectableList.size();
+            Iterator<Selectable> iterator = selectableList.iterator();
+            while (iterator.hasNext()){
+                Selectable item = iterator.next();
+                if (item.getSelected())
+                    iterator.remove();
+            }
+            return oldSize - selectableList.size();
+        } catch (ClassCastException ex) {
+            ex.printStackTrace();
+            return 0;
+        }
     }
 
     /**

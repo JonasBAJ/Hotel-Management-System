@@ -1,7 +1,5 @@
 package logic;
 
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ObservableValue;
 import org.jetbrains.annotations.Contract;
 
 /**
@@ -120,13 +118,13 @@ public class Room implements Selectable
     }
 
     @Override
-    public ObservableValue<Boolean> getSelected()
+    public Boolean getSelected()
     {
-        return new SimpleBooleanProperty(this.selected);
+        return this.selected;
     }
 
     @Override
-    public void setSelected(boolean selected)
+    public void setSelected(Boolean selected)
     {
         this.selected = selected;
     }

@@ -1,9 +1,6 @@
 package logic;
 
 
-import javafx.beans.value.ObservableValue;
-
-
 /**
  * Selectable interface is not implemented yet.
  * This interface will allow to select all derived objects
@@ -16,11 +13,13 @@ public interface Selectable
      * @param selected
      *      New boolean value.
      */
-    void setSelected(boolean selected);
+    void setSelected(Boolean selected);
 
     /**
      * Method should provide utility to get current object status.
      * @return true or false
      */
-    ObservableValue<Boolean> getSelected();
+    Boolean getSelected();
+
+
 }

@@ -36,6 +36,13 @@ public class User
         public String pass;
         public Type type;
 
+        /**
+         * Method returns a String object in order:
+         *      name + " " + pass + " " + type
+         * Example:
+         *      Name Password Admin
+         * @return string
+         */
         @Override
         public String toString() {
             return name + " " + pass + " " + type;

@@ -1,6 +1,12 @@
 package ui;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.WeakInvalidationListener;
+import javafx.beans.value.ChangeListener;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -8,6 +14,7 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import logic.Selectable;
 
+import javax.swing.event.ListDataEvent;
 import java.util.List;
 import java.util.Vector;
 
@@ -44,7 +51,7 @@ public class TableController extends TableView
         adminUI.borderPane.setCenter(this);
     }
 
-    private <T> Vector<TableColumn<T, String>> getTableColumns(int minWidth, String[] colNames)
+    private <T, S> Vector<TableColumn<T, String>> getTableColumns(int minWidth, String[] colNames)
     {
         Vector<TableColumn<T, String>> columns = new Vector<>();
         for (String colName : colNames) {
@@ -56,16 +63,14 @@ public class TableController extends TableView
         return columns;
     }
 
-    // Bedele
     private TableColumn<Selectable, Boolean> getBoolColumn()
     {
 
         TableColumn<Selectable, Boolean> boolColumn = new TableColumn<>("Selected");
         boolColumn.setMaxWidth(30);
         boolColumn.setEditable(true);
-        boolColumn.setCellValueFactory(new PropertyValueFactory<>("selected"));
-        boolColumn.setCellFactory(CheckBoxTableCell.forTableColumn(boolColumn));
-        //boolColumn.setCellFactory(e -> new CheckBoxTableCell<>());
+        CheckCell checkCell = new CheckCell();
+        boolColumn.setCellFactory(checkCell);
         return boolColumn;
     }
 }
