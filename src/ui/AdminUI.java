@@ -7,18 +7,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import logic.Client;
-import logic.Hotel;
-import logic.Room;
-import logic.employees.Employee;
-import ui.addInterface.AddClient;
-import ui.addInterface.AddEmployee;
-import ui.addInterface.AddRoom;
+import logic.hotels.Hotel;
+import logic.hotels.HotelCluster;
 import ui.addInterface.AddUI;
+import ui.addInterface.AddUiFactory;
+
+import java.util.List;
 
 
 public class AdminUI
@@ -26,18 +22,11 @@ public class AdminUI
     @FXML protected TreeView<String> treeView;
     @FXML protected Label mainLabel;
     @FXML protected BorderPane borderPane;
-    @FXML protected ChoiceBox<String> hotelBox;
+    @FXML protected ChoiceBox<HotelCluster> clusterBox;
+    @FXML protected ChoiceBox<Hotel> hotelBox;
     private TreeController treeController;
     private TableController tableController;
     private MyController myController;
-
-    private enum MenuItem
-    {
-        EMPLOYEES,
-        CLIENTS,
-        TASKS,
-        ROOMS
-    }
 
     public void initAdminForm(MyController myController)
     {
@@ -45,6 +34,7 @@ public class AdminUI
         this.treeController = new TreeController(this);
         treeController.initTreeView();
         this.tableController = new TableController(this);
+        initClusterBox();
         initHotelBox();
     }
 
@@ -58,10 +48,7 @@ public class AdminUI
                 break;
             case "All employees":
                 initNullScene("Employees > All employees");
-                updateTable(MenuItem.EMPLOYEES);
-                addButton(initAddButton("+", new AddEmployee(myController, hotelBox.getValue())),
-                        initRemoveButton("Employees"),
-                        initExportButton());
+                displayObjectTable(MenuItem.EMPLOYEES);
                 break;
             case "Assign task":
                 initNullScene("Employees > Assign task");
@@ -69,7 +56,7 @@ public class AdminUI
             case "All tasks":
                 initNullScene("Employees > All tasks");
                 updateTable(MenuItem.TASKS);
-                addButton(initExportButton());
+                addButtons(initExportButton(), initImportButton());
                 break;
 
             //Clients branch
@@ -78,10 +65,7 @@ public class AdminUI
                 break;
             case "All clients":
                 initNullScene("Clients > All clients");
-                updateTable(MenuItem.CLIENTS);
-                addButton(initAddButton("+", new AddClient(myController, hotelBox.getValue())),
-                        initRemoveButton("Clients"),
-                        initExportButton());
+                displayObjectTable(MenuItem.CLIENTS);
                 break;
 
             //Rooms branch
@@ -90,103 +74,116 @@ public class AdminUI
                 break;
             case "All rooms":
                 initNullScene("Rooms > Show all rooms");
-                updateTable(MenuItem.ROOMS);
-                addButton(initAddButton("+", new AddRoom(myController, hotelBox.getValue())),
-                        initRemoveButton("Rooms"),
-                        initExportButton());
+                displayObjectTable(MenuItem.ROOMS);
                 break;
         }
     }
 
+    private void displayObjectTable(MenuItem item) {
+        updateTable(item);
+        AddUI addUI = AddUiFactory.getAddUi(item, hotelBox.getValue());
+        Button add = initAddButton(addUI, item);
+        Button remove = initRemoveButton(item);
+        Button export = initExportButton();
+        Button importBtn = initImportButton();
+        addButtons(add, remove, export, importBtn);
+    }
+
+    @SuppressWarnings("unchecked")
     private void updateTable(MenuItem item)
     {
-        String hotelName = hotelBox.getValue();
-        Hotel hotel = myController.getHotelByName(hotelName);
-        if (hotelName != null && hotel != null) {
+        Hotel hotel = hotelBox.getValue();
+        if (hotel != null) {
             switch (item) {
                 case EMPLOYEES:
-                    tableController.updateTableView(hotel.getEmployees(), Employee.getFieldNames());
+                    tableController.updateTableView(hotel.getEmployees());
                     break;
                 case CLIENTS:
-                    tableController.updateTableView(hotel.getClients(), Client.getFieldNames());
+                    tableController.updateTableView(hotel.getClients());
                     break;
                 case TASKS:
-                    String[] fname = new String[1];
-                    fname[0] = "Type";
-                    tableController.updateTableView(myController.getAllTasks(), fname);
+                    tableController.updateTableView(hotel.getTasks());
                     break;
                 case ROOMS:
-                    tableController.updateTableView(hotel.getRooms(), Room.getFieldNames());
+                    tableController.updateTableView(hotel.getRooms());
                     break;
             }
+        }
+    }
+
+    private void initClusterBox() {
+
+        List<HotelCluster> clusters = myController.getSysNode().getClusters();
+        if (!clusters.isEmpty()) {
+            clusterBox.getItems().addAll(clusters);
+            clusterBox.setValue(clusters.get(0));
+            clusterBox.setOnAction(treeController);
+            clusterBox.setOnAction(e -> initHotelBox());
         }
     }
 
     private void initHotelBox()
     {
-        if (!myController.getHotels().isEmpty())
-        {
-            String[] names = myController.getHotelNames();
-            hotelBox.getItems().addAll(names);
-            hotelBox.setValue(names[0]);
+        HotelCluster cluster = clusterBox.getValue();
+        List<Hotel> hotels = cluster.getHotels();
+        if (!hotels.isEmpty()) {
+            hotelBox.getItems().removeAll(hotelBox.getItems());
+            hotelBox.getItems().addAll(hotels);
+            hotelBox.setValue(hotels.get(0));
             hotelBox.setOnAction(treeController);
-        }
-        else
-        {
-            System.out.println("No data loaded!");
         }
     }
 
-    private void addButton(Button... btn)
+    private void addButtons(Button... btn)
     {
         borderPane.setBottom(initHBox(10, Pos.CENTER_RIGHT, new Insets(5,5,5,5), btn));
     }
     
-    private Button initRemoveButton(String type)
+    private Button initRemoveButton(MenuItem item)
     {
         Button button = new Button("-");
+        Hotel hotel = hotelBox.getValue();
         button.setOnAction(e -> {
-            Hotel hotel = myController.getHotelByName(hotelBox.getValue());
-            switch (type){
-                case "Employees":
+            switch (item){
+                case EMPLOYEES:
                     hotel.removeSelected(hotel.getEmployees());
                     updateTable(MenuItem.EMPLOYEES);
                     break;
-                case "Rooms":
+                case ROOMS:
                     hotel.removeSelected(hotel.getRooms());
                     updateTable(MenuItem.ROOMS);
                     break;
-                case "Clients":
+                case CLIENTS:
                     hotel.removeSelected(hotel.getClients());
                     updateTable(MenuItem.CLIENTS);
+                    break;
+                case TASKS:
+
                     break;
             }
         });
         return button;
     }
 
-    private Button initExportButton()
-    {
-        Button button = new Button("Export to CSV");
-        button.setOnAction(e -> System.out.println("Not implemented"));
-        button.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
-            if (button.isFocused() && e.getCode() == KeyCode.ENTER)
-                System.out.println("Not implemented");
-        });
+    @SuppressWarnings("unchecked")
+    private Button initExportButton() {
+        Button button = new Button("Export");
+        button.setOnAction(e -> myController.showExportWizard(tableController));
         return button;
     }
 
-    private Button initAddButton(String buttonText, AddUI addInterface)
+    private Button initImportButton() {
+        Button button = new Button("Import");
+        button.setOnAction(e -> myController.showImportWizard(hotelBox.getValue()));
+        return button;
+    }
+
+    private Button initAddButton(AddUI addInterface, MenuItem item)
     {
-        Button button = new Button(buttonText);
+        Button button = new Button("+");
         button.setOnAction(e -> {
-            try {
-                myController.showAddWizard(addInterface);
-            }
-            catch (Exception ex)
-            {
-                ex.printStackTrace();
-            }
+            myController.showAddWizard(addInterface);
+            updateTable(item);
         });
         return button;
     }

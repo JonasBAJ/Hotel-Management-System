@@ -3,28 +3,39 @@ package ui;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import logic.Controller;
-import logic.Hotel;
-import logic.HotelSystem;
+import logic.hotels.Hotel;
+import logic.hotels.HotelSystem;
 import ui.addInterface.AddUI;
+import ui.ioInterface.ExportWizard;
+import ui.ioInterface.ImportWizard;
 
 
-public class MyController extends HotelSystem implements Controller
+public class MyController implements Controller
 {
     private Stage stage;
-    protected String passPath;
+    private String passPath;
+    private final HotelSystem system = HotelSystem.getInstance();
 
     public MyController(Stage stage)
     {
         this.stage = stage;
+        Image image = new Image("/datafiles/HIcon2.png");
+        stage.getIcons().add(image);
     }
 
     public void setPassFilePath(String path)
     {
         passPath = path;
+    }
+
+    public String getPassPath() {
+        return passPath;
     }
 
     public void showLogin()
@@ -69,6 +80,46 @@ public class MyController extends HotelSystem implements Controller
             secondStage.setTitle("Add wizard");
             secondStage.showAndWait();
         } catch (Exception ex) { ex.printStackTrace(); }
+    }
+
+    public void showExportWizard(TableController table)
+    {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ui_export.fxml"));
+        try {
+            Stage secondStage = new Stage();
+            GridPane exportForm = loader.load();
+            ExportWizard exportWizard = loader.getController();
+            exportWizard.initForm(table, secondStage);
+            secondStage.initModality(Modality.APPLICATION_MODAL);
+            secondStage.setScene(new Scene(exportForm));
+            secondStage.setTitle("Export wizard");
+            secondStage.showAndWait();
+        } catch (Exception ex) { ex.printStackTrace(); }
+    }
+
+    public void showImportWizard(Hotel hotel)
+    {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ui_import.fxml"));
+        try {
+            Stage secondStage = new Stage();
+            GridPane exportForm = loader.load();
+            ImportWizard importWizard = loader.getController();
+            importWizard.initForm(hotel, secondStage);
+            secondStage.initModality(Modality.APPLICATION_MODAL);
+            secondStage.setScene(new Scene(exportForm));
+            secondStage.setTitle("Import wizard");
+            secondStage.showAndWait();
+        } catch (Exception ex) { ex.printStackTrace(); }
+    }
+
+    @Override
+    public HotelSystem getSysNode() {
+        return system;
+    }
+
+    @Override
+    public void showLoadTestData() {
+
     }
 
     public void showMainEmployee(Hotel hotel)

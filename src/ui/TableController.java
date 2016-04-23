@@ -1,76 +1,63 @@
 package ui;
 
-import javafx.beans.InvalidationListener;
-import javafx.beans.WeakInvalidationListener;
-import javafx.beans.value.ChangeListener;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import logic.Selectable;
 
-import javax.swing.event.ListDataEvent;
 import java.util.List;
-import java.util.Vector;
 
 
 public class TableController extends TableView
 {
     private AdminUI adminUI;
-    private Integer columnWidth;
 
     public TableController(AdminUI adminUI)
     {
         this.adminUI = adminUI;
         setPadding(new Insets(5, 5, 5, 5));
-        this.columnWidth = 100;
     }
 
     public TableController(AdminUI adminUI, Insets value) {
         this.adminUI = adminUI;
         setPadding(value);
-        this.columnWidth = 100;
-    }
-
-    public void setMinCollumnWidth(Integer columnWidth) {
-        this.columnWidth = columnWidth;
     }
 
     @SuppressWarnings("unchecked")
-    public <T> void updateTableView(List<T> list, String[] colNames)
+    public <T> void updateTableView(List<T> objects)
     {
-        getColumns().removeAll(getColumns());
-        getColumns().add(getBoolColumn());
-        getColumns().addAll(getTableColumns(columnWidth, colNames));
-        setItems((ObservableList<T>) list);
-        adminUI.borderPane.setCenter(this);
-    }
-
-    private <T, S> Vector<TableColumn<T, String>> getTableColumns(int minWidth, String[] colNames)
-    {
-        Vector<TableColumn<T, String>> columns = new Vector<>();
-        for (String colName : colNames) {
-            TableColumn<T, String> nameColumn = new TableColumn<>(colName);
-            nameColumn.setMinWidth(minWidth);
-            nameColumn.setCellValueFactory(new PropertyValueFactory<>(colName.toLowerCase()));
-            columns.add(nameColumn);
+        List<Selectable> list = ((List<Selectable>) objects);
+        if (!list.isEmpty()) {
+            String[] colNames = list.get(0).getColumnNames();
+            getColumns().removeAll(getColumns());
+            for (String colName : colNames)
+            {
+                if (colName.equals("Selected"))
+                    getColumns().add(getBoolColumn(colName));
+                else
+                    getColumns().add(getColumn(colName));
+            }
+            setItems((ObservableList<Selectable>) objects);
+            adminUI.borderPane.setCenter(this);
         }
-        return columns;
     }
 
-    private TableColumn<Selectable, Boolean> getBoolColumn()
+    private <T, S> TableColumn<T, S> getColumn(String colName)
     {
+        TableColumn<T, S> nameColumn = new TableColumn<>(colName);
+        nameColumn.setResizable(true);
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>(colName.toLowerCase()));
+        return nameColumn;
+    }
 
-        TableColumn<Selectable, Boolean> boolColumn = new TableColumn<>("Selected");
-        boolColumn.setMaxWidth(30);
+    private TableColumn<Selectable, Boolean> getBoolColumn(String colName)
+    {
+        TableColumn<Selectable, Boolean> boolColumn = new TableColumn<>(colName);
+        boolColumn.setResizable(true);
         boolColumn.setEditable(true);
-        CheckCell checkCell = new CheckCell();
-        boolColumn.setCellFactory(checkCell);
+        boolColumn.setCellFactory(new CheckCell());
         return boolColumn;
     }
 }

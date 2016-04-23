@@ -2,9 +2,10 @@ package logic.employees;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
-import logic.Hotel;
 import logic.Selectable;
 import org.jetbrains.annotations.Contract;
+
+import java.text.ParseException;
 
 /**
  * Employee class is base class for all employee types.
@@ -17,15 +18,15 @@ public abstract class Employee implements Selectable
     /**
      * Field contains employee's name.
      */
-    protected SimpleStringProperty name;
+    protected String name;
     /**
      * Field contains employee's surname.
      */
-    protected SimpleStringProperty surname;
+    protected String surname;
     /**
      * Field contains employee's salary.
      */
-    protected DoubleProperty salary;
+    protected Double salary;
     /**
      * Field contains employee's position.
      */
@@ -42,23 +43,36 @@ public abstract class Employee implements Selectable
     {
         MANAGER,
         CHEF,
-        RECEPTIONIST
+        RECEPTIONIST;
+
+        public static Position parsePosition(String pos) {
+            switch (pos){
+                case "MANAGER":
+                    return MANAGER;
+                case "CHEF":
+                    return CHEF;
+                case "RECEPTIONIST":
+                    return RECEPTIONIST;
+                default:
+                    return null;
+            }
+        }
     }
 
     /**
      * Method returns array of object fields for easier ui development,
      * to quickly display information in droop down list or etc.
-     * @return fields
+     * @return columns
      */
-    @Contract(pure = true)
-    public static String[] getFieldNames()
-    {
-        String[] fields = new String[4];
-        fields[0] = "Name";
-        fields[1] = "Surname";
-        fields[2] = "Position";
-        fields[3] = "Salary";
-        return fields;
+    @Override
+    public String[] getColumnNames() {
+        String[] columns = new String[5];
+        columns[0] = "Selected";
+        columns[1] = "Name";
+        columns[2] = "Surname";
+        columns[3] = "Position";
+        columns[4] = "Salary";
+        return columns;
     }
 
     /**
@@ -75,7 +89,13 @@ public abstract class Employee implements Selectable
         return positions;
     }
 
-
+    /**
+     * Abstract method which should provide utility to employee object to be
+     * promoted to other category (type) of employee.
+     * @param position
+     *      Category promote to.
+     * @return Chef, Receptionist or Manager
+     */
     abstract Employee promoteTo(Position position);
 
     /**
@@ -84,7 +104,7 @@ public abstract class Employee implements Selectable
      */
     public String getName()
     {
-        return name.get();
+        return name;
     }
 
     /**
@@ -94,7 +114,7 @@ public abstract class Employee implements Selectable
      */
     public void setName(String name)
     {
-        this.name.setValue(name);
+        this.name = name;
     }
 
     /**
@@ -103,7 +123,7 @@ public abstract class Employee implements Selectable
      */
     public String getSurname()
     {
-        return surname.get();
+        return surname;
     }
 
     /**
@@ -112,7 +132,7 @@ public abstract class Employee implements Selectable
      *      New employee's surname.
      */
     public void setSurname(String surname) {
-        this.surname.setValue(surname);
+        this.surname = surname;
     }
 
     /**
@@ -121,7 +141,7 @@ public abstract class Employee implements Selectable
      *      New employee's salary.
      */
     public void setSalary(Double salary) {
-        this.salary.setValue(salary);
+        this.salary = salary;
     }
 
     /**
@@ -129,7 +149,7 @@ public abstract class Employee implements Selectable
      * @return salary
      */
     public Double getSalary() {
-        return this.salary.get();
+        return this.salary;
     }
 
     /**
@@ -150,5 +170,25 @@ public abstract class Employee implements Selectable
     public void setSelected(Boolean selected)
     {
         this.selected = selected;
+    }
+
+    @Override
+    public String toString() {
+        return this.selected +" "+
+                this.getName() +" "+
+                this.getSurname() +" "+
+                this.getPosition() +" "+
+                this.getSalary();
+    }
+
+    @Override
+    public String[] getFields() {
+        String [] fieldValues = new String[5];
+        fieldValues[0] = getSelected().toString();
+        fieldValues[1] = getName();
+        fieldValues[2] = getSurname();
+        fieldValues[3] = getPosition().toString();
+        fieldValues[4] = getSalary().toString();
+        return fieldValues;
     }
 }

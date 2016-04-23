@@ -2,11 +2,12 @@ package ui.addInterface;
 
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
-import logic.*;
 import logic.employees.Chef;
 import logic.employees.Employee;
 import logic.employees.Manager;
 import logic.employees.Receptionist;
+import logic.hotels.Hotel;
+import logic.hotels.HotelCluster;
 import ui.MyController;
 
 
@@ -17,10 +18,9 @@ public class AddEmployee extends AddUI
     private TextField nameField;
     private TextField surnameField;
 
-    public AddEmployee(MyController myController, String hotelName)
+    public AddEmployee(Hotel hotel)
     {
-        this.myController = myController;
-        this.hotelName = hotelName;
+        this.hotel = hotel;
         this.positionBox = new ChoiceBox<>();
         this.nameField = new TextField();
         this.surnameField = new TextField();
@@ -41,7 +41,7 @@ public class AddEmployee extends AddUI
 
     @Override protected void initMainLabel()
     {
-        mainLabel.setText(hotelName + " > Add employee");
+        mainLabel.setText(hotel.getName() + " > Add employee");
     }
 
     @Override protected void addTextField(TextField field, String promptText)
@@ -61,7 +61,6 @@ public class AddEmployee extends AddUI
     protected void preformAddition()
     {
         //TODO: validation of name and surname
-        Hotel hotel = myController.getHotelByName(hotelName);
         try {
             switch (positionBox.getValue()) {
                 case MANAGER:

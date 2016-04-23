@@ -1,6 +1,6 @@
 package ui;
 
-import com.sun.javafx.fxml.ObservableListChangeEvent;
+import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -14,8 +14,7 @@ public class CheckCell implements Callback<TableColumn<Selectable, Boolean>, Tab
     public TableCell<Selectable, Boolean> call(final TableColumn<Selectable, Boolean> param)
     {
         return new TableCell<Selectable, Boolean>() {
-
-            final CheckBox checkButton = new CheckBox();
+            final CheckBox checkBox = new CheckBox();
 
             @Override
             public void updateItem(Boolean item, boolean empty)
@@ -23,21 +22,22 @@ public class CheckCell implements Callback<TableColumn<Selectable, Boolean>, Tab
                 super.updateItem(item, empty);
                 if (empty) {
                     setGraphic(null);
+                    setAlignment(Pos.CENTER);
                     setText(null);
                 }
                 else {
-                    checkButton.setOnAction(e ->
-                    {
-                        Selectable selectableItem = getTableView().getItems().get(getIndex());
-                        if (checkButton.isSelected())
-                            selectableItem.setSelected(true);
-                        else
-                            selectableItem.setSelected(false);
+                    checkBox.setOnAction(e -> {
+                        Selectable selectable = getTableView().getItems().get(getIndex());
+                        selectable.setSelected(checkBox.isSelected());
                     });
-                    setGraphic(checkButton);
+                    checkBox.setSelected(getTableView().getItems().get(getIndex()).getSelected());
+                    setGraphic(checkBox);
+                    setAlignment(Pos.CENTER);
                     setText(null);
                 }
             }
         };
     }
 }
+
+

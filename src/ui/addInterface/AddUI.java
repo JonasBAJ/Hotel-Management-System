@@ -7,6 +7,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import logic.hotels.Hotel;
+import logic.hotels.HotelCluster;
 import ui.MyController;
 
 
@@ -17,9 +19,8 @@ public abstract class AddUI
     @FXML protected Button addButton;
     @FXML protected Button cancelButton;
     @FXML protected Label mainLabel;
-    protected MyController myController;
     protected Stage stage;
-    protected String hotelName;
+    protected Hotel hotel;
 
 
     public abstract void initForm();

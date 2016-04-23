@@ -18,9 +18,12 @@ public class TreeController implements ChangeListener<TreeItem<String>>, EventHa
 
     public void initTreeView()
     {
-        TreeItem<String> root, employeesBranch, clientsBranch, roomsBranch;
+        TreeItem<String> root, systemBranch, employeesBranch, clientsBranch, roomsBranch;
         root = new TreeItem<>();
         root.setExpanded(true);
+
+        systemBranch = makeBranch("System", root);
+        makeBranch("Clusters", root);
 
         employeesBranch = makeBranch("Employees", root);
         makeBranch("All employees", employeesBranch);

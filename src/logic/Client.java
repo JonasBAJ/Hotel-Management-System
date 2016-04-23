@@ -1,6 +1,7 @@
 package logic;
 
 import javafx.beans.property.SimpleStringProperty;
+import logic.employees.Employee;
 import org.jetbrains.annotations.Contract;
 
 import java.time.LocalDate;
@@ -15,11 +16,11 @@ public class Client implements Selectable
     /**
      * Client name field.
      */
-    private final SimpleStringProperty name;
+    private String name;
     /**
      * Client surname field.
      */
-    private final SimpleStringProperty surname;
+    private String surname;
     /**
      * For now this field is not implemented.
      */
@@ -50,8 +51,8 @@ public class Client implements Selectable
      */
     public Client(String name, String surname, LocalDate arrival, LocalDate departure)
     {
-        this.name = new SimpleStringProperty(name);
-        this.surname = new SimpleStringProperty(surname);
+        this.name = name;
+        this.surname = surname;
         this.selected = false;
         this.arrival = arrival;
         this.departure = departure;
@@ -61,17 +62,28 @@ public class Client implements Selectable
     /**
      * Method returns user class field names for easier ui development,
      * to quickly display information about client.
-     * @return fields
+     * @return columns
      */
-    @Contract(pure = true) public static String[] getFieldNames()
-    {
-        String[] fields = new String[5];
-        fields[0] = "Name";
-        fields[1] = "Surname";
-        fields[2] = "Arrival";
-        fields[3] = "Departure";
-        fields[4] = "Duration";
-        return fields;
+    @Override
+    public String[] getColumnNames() {
+        String[] columns = new String[6];
+        columns[0] = "Selected";
+        columns[1] = "Name";
+        columns[2] = "Surname";
+        columns[3] = "Arrival";
+        columns[4] = "Departure";
+        columns[5] = "Duration";
+        return columns;
+    }
+
+    @Override
+    public String toString() {
+        return getSelected() +" "+
+                getName() +" "+
+                getSurname() +" "+
+                getArrival() +" "+
+                getDeparture() +" "+
+                getDuration();
     }
 
     @Override
@@ -91,7 +103,7 @@ public class Client implements Selectable
      * @return name
      */
     public String getName() {
-        return name.get();
+        return name;
     }
 
     /**
@@ -100,7 +112,7 @@ public class Client implements Selectable
      *      New client's name.
      */
     public void setName(String name) {
-        this.name.set(name);
+        this.name = name;
     }
 
     /**
@@ -108,7 +120,7 @@ public class Client implements Selectable
      * @return surname
      */
     public String getSurname() {
-        return surname.get();
+        return surname;
     }
 
     /**
@@ -117,7 +129,7 @@ public class Client implements Selectable
      *      New client's surname.
      */
     public void setSurname(String surname) {
-        this.surname.set(surname);
+        this.surname = surname;
     }
 
     /**
@@ -169,5 +181,22 @@ public class Client implements Selectable
      */
     public void setDuration(Long duration) {
         this.duration = duration;
+    }
+
+    public Selectable getSelectable()
+    {
+        return this;
+    }
+
+    @Override
+    public String[] getFields() {
+        String [] fieldValues = new String[6];
+        fieldValues[0] = getSelected().toString();
+        fieldValues[1] = getName();
+        fieldValues[2] = getSurname();
+        fieldValues[3] = getArrival().toString();
+        fieldValues[4] = getDeparture().toString();
+        fieldValues[5] = getDuration().toString();
+        return fieldValues;
     }
 }

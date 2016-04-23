@@ -12,47 +12,56 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Created by jonas on 16.4.7.
+ * Created by jonas on 16.4.6.
  */
-public class EmployeeLevelTask implements Task
+public class ClusterLevelTask implements Task
 {
+    /**
+     * Field contains boolean value for easier manipulation in Hotel object.
+     */
     protected Boolean selected;
-    protected List<Employee> children;
+    protected List<HotelCluster> children;
     protected LocalDateTime assigned;
     protected String task;
     protected Type type;
 
-    public EmployeeLevelTask(Collection<Employee> children, String task)
-    {
+    public ClusterLevelTask(Collection<HotelCluster> children, String task) {
         this.children = FXCollections.observableArrayList();
         this.children.addAll(children);
         this.task = task;
         this.selected = false;
-        this.type = Type.EMPLOYEE_LEVEL;
+        this.type = Type.SYSTEM_LEVEL;
         setTimestamp();
     }
 
-    public EmployeeLevelTask(Employee children, String task)
-    {
+    public ClusterLevelTask(HotelCluster child, String task) {
         this.children = FXCollections.observableArrayList();
-        this.children.add(children);
+        this.children.add(child);
         this.task = task;
         this.selected = false;
-        this.type = Type.EMPLOYEE_LEVEL;
+        this.type = Type.SYSTEM_LEVEL;
         setTimestamp();
     }
 
     @Override
+    public String[] getColumnNames() {
+        String[] columns = new String[4];
+        columns[0] = "Selected";
+        columns[1] = "Assigned";
+        columns[2] = "Task";
+        columns[3] = "Type";
+        return columns;
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
-    public List<Employee> getTaskLevelObjects() {
+    public List<HotelCluster> getTaskLevelObjects() {
         return this.children;
     }
 
     @Override
     public List<String> getChildrenNames() {
-        List<String> list = FXCollections.observableArrayList();
-        this.children.forEach(employee -> list.add(employee.toString()));
-        return list;
+        return null;
     }
 
     @Override
@@ -63,8 +72,8 @@ public class EmployeeLevelTask implements Task
     @Override
     public <T> void setTaskLevelObjects(Collection<T> children) {
         children.forEach(child -> {
-            if (child instanceof Employee)
-                this.children.add((Employee) child);
+            if (child instanceof HotelCluster)
+                this.children.add((HotelCluster) child);
         });
     }
 
@@ -73,10 +82,10 @@ public class EmployeeLevelTask implements Task
     public <T> Task promoteTo(Type type, Collection<T> children) {
         if (this.type != type)
             switch (type){
-                case SYSTEM_LEVEL:
-                    return TaskFactory.getClusterLevel(((Collection<HotelCluster>) children), this.task);
                 case HOTEL_LEVEL:
                     return TaskFactory.getHotelLevel(((Collection<Hotel>) children), this.task);
+                case EMPLOYEE_LEVEL:
+                    return TaskFactory.getEmployeeLevel(((Collection<Employee>) children), this.task);
             }
         return this;
     }
@@ -85,17 +94,12 @@ public class EmployeeLevelTask implements Task
     public <T> Task promoteTo(Type type, T child) {
         if (this.type != type)
             switch (type){
-                case SYSTEM_LEVEL:
-                    return TaskFactory.getTask(child, this.task);
                 case HOTEL_LEVEL:
+                    return TaskFactory.getTask(child, this.task);
+                case EMPLOYEE_LEVEL:
                     return TaskFactory.getTask(child, this.task);
             }
         return this;
-    }
-
-    @Override
-    public Type getType() {
-        return this.type;
     }
 
     @Override
@@ -106,6 +110,11 @@ public class EmployeeLevelTask implements Task
     @Override
     public Boolean getSelected() {
         return this.selected;
+    }
+
+    public Type getType()
+    {
+        return this.type;
     }
 
     @Override
@@ -135,22 +144,11 @@ public class EmployeeLevelTask implements Task
     }
 
     @Override
-    public String[] getColumnNames() {
-        String[] columns = new String[4];
-        columns[0] = "Selected";
-        columns[1] = "Assigned";
-        columns[2] = "Task";
-        columns[3] = "Type";
-        return columns;
-    }
-
-    @Override
     public String[] getFields() {
-        String [] fieldValues = new String[4];
-        fieldValues[0] = getSelected().toString();
-        fieldValues[1] = getAssigned();
-        fieldValues[2] = getTask();
-        fieldValues[3] = getType().toString();
+        String [] fieldValues = new String[3];
+        fieldValues[0] = getAssigned();
+        fieldValues[1] = getTask();
+        fieldValues[2] = getType().toString();
         return fieldValues;
     }
 }

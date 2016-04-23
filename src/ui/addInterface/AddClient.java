@@ -6,8 +6,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import logic.Client;
-import ui.MyController;
-import logic.Hotel;
+import logic.hotels.Hotel;
 
 
 public class AddClient extends AddUI
@@ -20,10 +19,9 @@ public class AddClient extends AddUI
     private HBox hBox;
 
 
-    public AddClient(MyController myController, String hotelName)
+    public AddClient(Hotel hotel)
     {
-        this.myController = myController;
-        this.hotelName = hotelName;
+        this.hotel = hotel;
         clientCount = new ChoiceBox<>();
         nameField = new TextField();
         surnameField = new TextField();
@@ -62,7 +60,7 @@ public class AddClient extends AddUI
     @Override
     protected void initMainLabel()
     {
-        mainLabel.setText(hotelName + " > Add client");
+        mainLabel.setText(hotel.getName() + " > Add client");
     }
 
     @Override
@@ -84,7 +82,6 @@ public class AddClient extends AddUI
     protected void preformAddition()
     {
         //TODO: validation of name and surname
-        Hotel hotel = myController.getHotelByName(hotelName);
         hotel.addClient(new Client(
                 nameField.getText(),
                 surnameField.getText(),

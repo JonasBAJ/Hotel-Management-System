@@ -2,8 +2,9 @@ package ui.addInterface;
 
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
-import logic.Hotel;
+import logic.hotels.Hotel;
 import logic.Room;
+import logic.hotels.HotelCluster;
 import ui.MyController;
 
 public class AddRoom extends AddUI
@@ -11,10 +12,9 @@ public class AddRoom extends AddUI
     ChoiceBox<Room.Type> typeBox;
     ChoiceBox<Integer> bedroomCount;
 
-    public AddRoom(MyController myController, String hotelName)
+    public AddRoom(Hotel hotel)
     {
-        this.myController = myController;
-        this.hotelName = hotelName;
+        this.hotel = hotel;
         this.typeBox = new ChoiceBox<>();
         this.bedroomCount = new ChoiceBox<>();
     }
@@ -36,13 +36,12 @@ public class AddRoom extends AddUI
 
     @Override protected void initMainLabel()
     {
-        mainLabel.setText(hotelName + " > Add room");
+        mainLabel.setText(hotel.getName() + " > Add room");
     }
 
     protected void preformAddition()
     {
         //TODO: validation of bedrooms
-        Hotel hotel = myController.getHotelByName(hotelName);
         Integer bedrooms = bedroomCount.getValue();
         hotel.addRoom(new Room(bedrooms, typeBox.getValue()));
     }

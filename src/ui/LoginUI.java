@@ -31,13 +31,13 @@ public class LoginUI
 
     private void initLoadDataBox()
     {
-        loadDataBox.setOnAction(e -> initEmployeeBox());
+        //loadDataBox.setOnAction(e -> initEmployeeBox());
     }
 
     private void initLoginButton()
     {
         loginButton.setOnAction(e -> {
-            if (myController.authorize(getUserData(), myController.passPath)) {
+            if (myController.getSysNode().authorize(getUserData(), myController.getPassPath())) {
                 myController.showMainAdmin();
             } else {
                 statusBar.setText("No such user");
@@ -49,7 +49,7 @@ public class LoginUI
     {
         passField.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
             if (passField.isFocused() && !passField.getText().equals("") && e.getCode() == KeyCode.ENTER) {
-                if (myController.authorize(getUserData(),myController.passPath)) {
+                if (myController.getSysNode().authorize(getUserData(),myController.getPassPath())) {
                     myController.showMainAdmin();
                 } else {
                     statusBar.setText("No such user");
@@ -82,9 +82,9 @@ public class LoginUI
         });
     }
 
-    private void initEmployeeBox()
+    /*private void initEmployeeBox()
     {
-        if (myController.getHotels().isEmpty())
+        if (myController.getSysNode()..isEmpty())
         {
             myController.loadTestData();
         }
@@ -98,5 +98,5 @@ public class LoginUI
             employeeBox.getItems().removeAll(myController.getHotelNames());
             employeeBox.setDisable(true);
         }
-    }
+    }*/
 }

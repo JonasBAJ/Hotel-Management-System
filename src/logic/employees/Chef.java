@@ -3,6 +3,7 @@ package logic.employees;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
+import logic.Selectable;
 
 /**
  * Chef class provides constructor for employee with chef position.
@@ -12,9 +13,10 @@ public class Chef extends Employee
 {
     public Chef(String name, String surname)
     {
-        this.name = new SimpleStringProperty(name);
-        this.surname = new SimpleStringProperty(surname);
-        this.salary = new SimpleDoubleProperty(680.00);
+        this.name = name;
+        this.surname = surname;
+        this.position = Position.CHEF;
+        this.salary = 680.00;
         this.selected = false;
     }
 

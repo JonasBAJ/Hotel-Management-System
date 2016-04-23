@@ -1,7 +1,7 @@
 package logic.tasks;
 
-import logic.Hotel;
-import logic.HotelSystem;
+import logic.hotels.Hotel;
+import logic.hotels.HotelCluster;
 import logic.employees.Employee;
 import org.jetbrains.annotations.Contract;
 
@@ -13,32 +13,41 @@ import java.util.Collection;
 public class TaskFactory
 {
     @Contract("_ -> !null")
-    public static Task getHotelLevel(Collection<Hotel> hotels) {
-        return new HotelLevelTask(hotels);
+    public static Task getHotelLevel(Collection<Hotel> hotels, String task) {
+        return new HotelLevelTask(hotels, task);
     }
 
     @Contract("_ -> !null")
-    public static Task getSystemLevel(Collection<HotelSystem> hotelSystems) {
-        return new SystemLevelTask(hotelSystems);
+    public static Task getClusterLevel(Collection<HotelCluster> hotelCluster, String task) {
+        return new ClusterLevelTask(hotelCluster, task);
     }
 
     @Contract("_ -> !null")
-    public static Task getEmployeeLevel(Collection<Employee> employees) {
-        return new EmployeeLevelTask(employees);
+    public static Task getEmployeeLevel(Collection<Employee> employees, String task) {
+        return new EmployeeLevelTask(employees, task);
     }
 
-    @Contract("_ -> !null")
-    public static Task getHotelLevel(Hotel hotel) {
-        return new HotelLevelTask(hotel);
+    public static <T> Task getTask(T object, String task) {
+        if (object instanceof Employee)
+            return new EmployeeLevelTask((Employee) object, task);
+        else if (object instanceof Hotel)
+            return new HotelLevelTask((Hotel) object, task);
+        else if (object instanceof HotelCluster)
+            return new ClusterLevelTask((HotelCluster) object, task);
+        else
+            return null;
     }
 
-    @Contract("_ -> !null")
-    public static Task getSystemLevel(HotelSystem hotelSystem) {
-        return new SystemLevelTask(hotelSystem);
-    }
-
-    @Contract("_ -> !null")
-    public static Task getEmployeeLevel(Employee employee) {
-        return new EmployeeLevelTask(employee);
+    public static <T> Task getTask(T object, String task, Task.Type type) {
+        switch (type) {
+            case HOTEL_LEVEL:
+                return new HotelLevelTask((Hotel) object, task);
+            case EMPLOYEE_LEVEL:
+                return new EmployeeLevelTask((Employee) object, task);
+            case SYSTEM_LEVEL:
+                return new ClusterLevelTask((HotelCluster) object, task);
+            default:
+                return null;
+        }
     }
 }

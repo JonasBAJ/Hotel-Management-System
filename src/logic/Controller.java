@@ -1,5 +1,8 @@
 package logic;
 
+import logic.hotels.Hotel;
+import logic.hotels.HotelSystem;
+
 /**
  * Interface must be implemented by ui controller class to create custom user interface.
  */
@@ -30,5 +33,7 @@ public interface Controller
      * @param hotel
      *      Hotel object in which employee works.
      */
+    HotelSystem getSysNode();
+    void showLoadTestData();
     void showMainEmployee(Hotel hotel);  // Not implemented
 }

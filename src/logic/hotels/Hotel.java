@@ -1,9 +1,15 @@
-package logic;
+package logic.hotels;
 
 import javafx.collections.FXCollections;
 import javafx.scene.Node;
+import logic.Client;
+import logic.Room;
+import logic.Selectable;
 import logic.employees.Employee;
+import logic.tasks.Task;
+import logic.tasks.TaskFactory;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.prefs.NodeChangeEvent;
@@ -47,6 +53,11 @@ public class Hotel
      * in this hotel.
      */
     private List<Room> rooms;
+    /**
+     * Field contains list of tasks for this hotel
+     * in this hotel.
+     */
+    private List<Task> tasks;
 
 
     /**
@@ -58,6 +69,7 @@ public class Hotel
     {
         this.hotelName = name;
         this.employees = FXCollections.observableArrayList();
+        this.tasks = FXCollections.observableArrayList();
         this.clients = FXCollections.observableArrayList();
         this.rooms = FXCollections.observableArrayList();
     }
@@ -119,6 +131,12 @@ public class Hotel
         personnelCount++;
     }
 
+    public void addEmployees(Collection<Employee> employees)
+    {
+        this.employees.addAll(employees);
+        personnelCount += employees.size();
+    }
+
     /**
      * Method removes employee from employees list in hotel object.
      * @param employee
@@ -140,6 +158,12 @@ public class Hotel
     public void addRoom(Room room)
     {
         rooms.add(room);
+        roomsCount++;
+    }
+
+    public void addRooms(Collection<Room> rooms)
+    {
+        this.rooms.addAll(rooms);
         roomsCount++;
     }
 
@@ -194,6 +218,13 @@ public class Hotel
         clientCount++;
     }
 
+
+    public void addClients(Collection<Client> clients)
+    {
+        this.clients.addAll(clients);
+        clientCount++;
+    }
+
     /**
      * Method removes client from clients list in hotel object.
      * @param client
@@ -207,6 +238,36 @@ public class Hotel
         }
     }
 
+    public void addTask(String task)
+    {
+        this.tasks.add(TaskFactory.getTask(this, task));
+    }
+
+    public void addTask(Task task){
+        this.tasks.add(task);
+    }
+
+    //TODO: change task type
+    public void addTasks(Collection<Task> tasks)
+    {
+        this.tasks.addAll(tasks);
+    }
+
+    public List<Task> getTasks()
+    {
+        return this.tasks;
+    }
+
+    public List<Task> getTasksByType(Task.Type type)
+    {
+        List<Task> typeList = FXCollections.observableArrayList();
+        this.tasks.forEach(task -> {
+            if (task.getType() == type)
+                typeList.add(task);
+        });
+        return typeList;
+    }
+
     @SuppressWarnings("unchecked")
     public <T> int removeSelected(List<T> list)
     {
@@ -214,7 +275,7 @@ public class Hotel
             List<Selectable> selectableList = ((List<Selectable>) list);
             int oldSize = selectableList.size();
             Iterator<Selectable> iterator = selectableList.iterator();
-            while (iterator.hasNext()){
+            while (iterator.hasNext()) {
                 Selectable item = iterator.next();
                 if (item.getSelected())
                     iterator.remove();

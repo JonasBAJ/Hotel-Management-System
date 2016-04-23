@@ -1,16 +1,14 @@
 package logic.employees;
 
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleStringProperty;
-
 public class Manager extends Employee
 {
 
     public Manager(String name, String surname)
     {
-        this.name = new SimpleStringProperty(name);
-        this.surname = new SimpleStringProperty(surname);
-        this.salary = new SimpleDoubleProperty(800.00);
+        this.name = name;
+        this.surname = surname;
+        this.position = Position.MANAGER;
+        this.salary = 800.00;
         this.selected = false;
     }
 

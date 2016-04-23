@@ -2,6 +2,8 @@ package logic;
 
 import org.jetbrains.annotations.Contract;
 
+import java.time.LocalDate;
+
 /**
  * Room class is supplement class for hotel object.
  */
@@ -16,13 +18,13 @@ public class Room implements Selectable
      */
     private final Type type;
     /**
-     * Field contains boolean value of this room status.
-     */
-    private boolean booked;
-    /**
-     * For now this field is not implemented.
+     * Field contains boolean value for easier manipulation.
      */
     private Boolean selected;
+    /**
+     * Field contains Client object.
+     */
+    private Client client = null;
 
     /**
      * Enum of room types.
@@ -31,7 +33,20 @@ public class Room implements Selectable
     {
         STANDARD,
         PREMIUM,
-        SUITE
+        SUITE;
+
+        public static Type parseType(String type) {
+            switch (type){
+                case "STANDARD":
+                    return STANDARD;
+                case "SUITE":
+                    return SUITE;
+                case "PREMIUM":
+                    return PREMIUM;
+                default:
+                    return null;
+            }
+        }
     }
 
     /**
@@ -63,18 +78,20 @@ public class Room implements Selectable
         return types;
     }
 
+
     /**
      * Method returns string array of this object fields for easier ui development,
      * to quickly display information in droop down list or etc.
-     * @return fields
+     * @return columns
      */
-    @Contract(pure = true) public static String[] getFieldNames()
-    {
-        String[] fields = new String[3];
-        fields[0] = "Bedrooms";
-        fields[1] = "Type";
-        fields[2] = "Booked";
-        return fields;
+    @Override
+    public String[] getColumnNames() {
+        String[] columns = new String[4];
+        columns[0] = "Selected";
+        columns[1] = "Bedrooms";
+        columns[2] = "Type";
+        columns[3] = "Booked";
+        return columns;
     }
 
     /**
@@ -86,18 +103,45 @@ public class Room implements Selectable
      */
     public Room(int bedrooms, Type type)
     {
-        super();
-        this.booked = false;
         this.bedrooms = bedrooms;
         this.type = type;
         this.selected = false;
+    }
+
+    public String getBooked() throws NullPointerException {
+        try {
+            String arrival = this.client.getArrival().toString();
+            String departure = this.client.getDeparture().toString();
+            String period = arrival + "|" + departure;
+            return period;
+        } catch (NullPointerException ex) {
+            return "ND";
+        }
+    }
+
+    public Boolean isBooked(LocalDate date) {
+        if(this.client == null) {
+            return false;
+        } else {
+            LocalDate arrival = this.client.getArrival();
+            LocalDate departure = this.client.getDeparture();
+            return !date.isBefore(arrival) && !date.isAfter(departure);
+        }
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
     }
 
     /**
      * Method returns count of bedrooms in room object.
      * @return bedrooms
      */
-    public int getBedrooms() {
+    public Integer getBedrooms() {
         return bedrooms;
     }
 
@@ -107,14 +151,6 @@ public class Room implements Selectable
      */
     public Type getType() {
         return type;
-    }
-
-    /**
-     * Method returns boolean value of room status.
-     * @return booked
-     */
-    public boolean isBooked() {
-        return booked;
     }
 
     @Override
@@ -127,5 +163,22 @@ public class Room implements Selectable
     public void setSelected(Boolean selected)
     {
         this.selected = selected;
+    }
+
+    @Override
+    public String toString() {
+        return this.getSelected() +" "+
+                this.getBedrooms() +" "+
+                this.getType() +" "+
+                this.getBooked();
+    }
+
+    @Override
+    public String[] getFields() {
+        String [] fieldValues = new String[3];
+        fieldValues[0] = getSelected().toString();
+        fieldValues[1] = getBedrooms().toString();
+        fieldValues[2] = getType().toString();
+        return fieldValues;
     }
 }
